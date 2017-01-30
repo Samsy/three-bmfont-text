@@ -25,9 +25,12 @@ module.exports = function createSDFShader (opt) {
       'attribute vec4 position;',
       'uniform mat4 projectionMatrix;',
       'uniform mat4 modelViewMatrix;',
+      'attribute vec3 color;',
+      'varying vec3 vColor;',
       'varying vec2 vUv;',
       'void main() {',
       'vUv = uv;',
+      'vColor = color;',
       'gl_Position = projectionMatrix * modelViewMatrix * position;',
       '}'
     ].join('\n'),
@@ -37,9 +40,9 @@ module.exports = function createSDFShader (opt) {
       '#endif',
       'precision ' + precision + ' float;',
       'uniform float opacity;',
-      'uniform vec3 color;',
       'uniform sampler2D map;',
       'varying vec2 vUv;',
+      'varying vec3 vColor;',
 
       'float aastep(float value) {',
       '  #ifdef GL_OES_standard_derivatives',
@@ -53,7 +56,7 @@ module.exports = function createSDFShader (opt) {
       'void main() {',
       '  vec4 texColor = texture2D(map, vUv);',
       '  float alpha = aastep(texColor.a);',
-      '  gl_FragColor = vec4(color, opacity * alpha);',
+      '  gl_FragColor = vec4(vColor, opacity * alpha);',
       alphaTest === 0
         ? ''
         : '  if (gl_FragColor.a < ' + alphaTest + ') discard;',
