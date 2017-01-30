@@ -3,7 +3,7 @@ var inherits = require('inherits')
 var createIndices = require('quad-indices')
 var buffer = require('three-buffer-vertex-data')
 var assign = require('object-assign')
-
+var colors = require('./lib/colors')
 var vertices = require('./lib/vertices')
 var utils = require('./lib/utils')
 
@@ -71,11 +71,13 @@ TextGeometry.prototype.update = function (opt) {
     type: 'uint16',
     count: glyphs.length
   })
+  var attrcolors = colors.attribute( opt.color, positions.length / 2 * 3)
 
   // update vertex data
   buffer.index(this, indices, 1, 'uint16')
   buffer.attr(this, 'position', positions, 2)
   buffer.attr(this, 'uv', uvs, 2)
+  buffer.attr(this, 'color', attrcolors, 3)
 
   // update multipage data
   if (!opt.multipage && 'page' in this.attributes) {
