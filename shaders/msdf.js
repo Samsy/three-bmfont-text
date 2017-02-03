@@ -26,7 +26,11 @@ module.exports = function createMSDFShader (opt) {
       'uniform mat4 projectionMatrix;',
       'uniform mat4 modelViewMatrix;',
       'varying vec2 vUv;',
+      'attribute vec3 color;',
+      'varying vec3 vColor;',
+      'vColor = color;',
       'void main() {',
+      'vColor = color;',
       'vUv = uv;',
       'gl_Position = projectionMatrix * modelViewMatrix * position;',
       '}'
@@ -40,6 +44,7 @@ module.exports = function createMSDFShader (opt) {
       'uniform vec3 color;',
       'uniform sampler2D map;',
       'varying vec2 vUv;',
+      'varying vec3 vColor;',
 
       'float median(float r, float g, float b) {',
       '  return max(min(r, g), min(max(r, g), b));',
@@ -49,7 +54,7 @@ module.exports = function createMSDFShader (opt) {
       '  vec3 sample = 1.0 - texture2D(map, vUv).rgb;',
       '  float sigDist = median(sample.r, sample.g, sample.b) - 0.5;',
       '  float alpha = clamp(sigDist/fwidth(sigDist) + 0.5, 0.0, 1.0);',
-      '  gl_FragColor = vec4(color.xyz, alpha * opacity);',
+      '  gl_FragColor = vec4(vColor, alpha * opacity);',
       alphaTest === 0
         ? ''
         : '  if (gl_FragColor.a < ' + alphaTest + ') discard;',
