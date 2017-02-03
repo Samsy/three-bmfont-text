@@ -32,6 +32,7 @@ module.exports = function createMSDFShader (opt) {
       'void main() {',
       'vColor = color;',
       'vUv = uv;',
+      'vColor = color;',
       'gl_Position = projectionMatrix * modelViewMatrix * position;',
       '}'
     ].join('\n'),
